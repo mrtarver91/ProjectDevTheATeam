@@ -1,0 +1,62 @@
+    Private Sub SearchButton_Click(sender As Object, e As EventArgs) Handles SearchButton.Click
+        Try
+
+            Dim ds As New DataSet
+            ssn = txtSSN.Text
+            LastName = txtLastName.Text
+            'selectedInstructor = ""
+            'This example will load the DataGridView
+            'Dim sql As String = "SELECT NAME FROM INSTRUCTOR;"
+            Dim sql As String = "SELECT SSN, LASTNAME From GRADSTUDENTS WHERE (SSN ='" & ssn & "'  OR LASTNAME ='" & LastName & "' );"
+            '"SELECT NAME,TID from INSTRUCTOR WHERE NAME ='" & selectedInstructor & "' ;"
+            con.ConnectionString = ConnString
+            con.Open()
+            oledbAdapter = New OleDbDataAdapter(sql, con)
+            oledbAdapter.Fill(ds)
+            DataGridView1.DataSource = ds.Tables(0)
+            con.Close()
+        Catch ex As Exception
+            MessageBox.Show("Error in retrieving instructor list from database" & ex.Message, "Database Error")
+            con.Close()
+        End Try
+    End Sub
+
+
+
+
+
+Private Sub DataGridView1_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView1.CellContentClick
+        Try
+            selectedStudent = DataGridView1.CurrentCell.FormattedValue
+            Dim command As New OleDbCommand("SELECT INSERT INTO GRADSTUDENTS (SSN,LASTNAME, MIDDLENAME, FIRSTNAME,DOB, BIRTHPLACE, RACE, GENDER, CITIZENSHIP, 
+
+PERMADDRESS, PERMCITY, PERMZIPCODE,PERMSTATE, YEARSATPERM,MAILADDRESS,MAILCITY, MAILSTATE,MAILZIPCODE, FORMERADDRESS, FORMERCITY, 
+
+FORMERSTATE,FORMERZIPCODE,YEARSATFORMER,ARRESIDENT,HOMEPHONE,CELLPHONE,EMAIL,HISORLATIN, 
+
+ADMITREQYEAR,ADMITREQTERM,ADMITREQPROGRAM,APPLIEDWHEN,PREVENROLL,APPLIEDBEFORE,PREVENROLLWHEN,PREVENROLLLEVEL,COLLEGE1,COLLEGE2,COLLEGE1HOURS,COLLEGE2HOURS,COL
+
+LEGE1GPA,COLLEGE2GPA,COLLEGE1GRADUATED,COLLEGE2GRADUATED,COLLEGE1DEGREE,COLLEGE2DEGREE,COLLEGE1DATET,COLLEGE1DATEF,COLLEGE2DATET,COLLEGE2DATEF,GMATDATE,TOEFLDA
+
+TE,GREDATE,GMAT,TOEFL,GRE,APPLICFORM,APPLICFEE,RESUME,LORS,TRANSCRIPTS,ESSAYQ,GMATGRE,EDUEXP,SUPPFINNFORM,TOEFLINCLU FROM GRADSTUDENTS WHERE LASTNAME = '" & 
+
+selectedStudent & "' ;", con)
+            '(SELECT EmployeeID FROM Employee WHERE Name ='" & selectedEmployee & "') ;", con)
+            Dim dr As OleDbDataReader
+
+            con.ConnectionString = ConnString
+            con.Open()
+
+
+
+
+
+            dr = command.ExecuteReader()
+
+            While dr.Read()
+                'ListBox2.Items.Add(Trim(dr.GetString(0) & " " & dr.GetString(1) & " " & dr.GetString(2)))
+                txtSSN.Text = dr.GetString(0)
+                txtLastName.Text = dr.GetString(1)
+
+end try
+end sub
